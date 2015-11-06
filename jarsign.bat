@@ -1,0 +1,2 @@
+for %%F IN (%WORKSPACE%\target\lib\*) DO (jarsigner -keystore %WORKSPACE%\src\main\resources\kvmtest -storepass kvmtest %%F kvmtest)
+jarsigner -keystore %WORKSPACE%\src\main\resources\kvmtest -storepass kvmtest "%JENKINS_HOME%\jobs\%JOB_NAME%\builds\%BUILD_NUMBER%\com.kvm$kvmclient\archive\com.kvm\kvmclient\0.0.1-SNAPSHOT\kvmclient-0.0.1-SNAPSHOT.jar" kvmtest
