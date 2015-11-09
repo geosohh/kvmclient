@@ -2,15 +2,11 @@ package com.kvm.client;
 
 import java.awt.event.KeyEvent;
 import java.io.IOException;
-import java.io.StringReader;
-import java.net.DatagramSocket;
-import java.net.SocketException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
 import javax.json.Json;
 import javax.json.JsonObject;
-import javax.json.JsonReader;
 import javax.websocket.ClientEndpoint;
 import javax.websocket.ContainerProvider;
 import javax.websocket.DeploymentException;
@@ -48,7 +44,6 @@ public class WebSocket {
     public void onOpen(Session session){
         userSession = session;
         LOG.trace("Client session open");
-        createUDPListeners();
     }
     
     @OnClose
@@ -62,16 +57,17 @@ public class WebSocket {
         LOG.error("Error on session "+session.getId()+"): "+throwable);
     }
     
+    /*
     @OnMessage
     public void onMessage(String message){
         JsonReader jsonReader = Json.createReader(new StringReader(message));
         JsonObject jsonData = jsonReader.readObject();
-        /*if (jsonData.containsKey(WebSocketEvent.VIDEO_DATA) && videoDataListener!=null){
+        if (jsonData.containsKey(WebSocketEvent.VIDEO_DATA) && videoDataListener!=null){
             String imgString = jsonData.getString(WebSocketEvent.VIDEO_DATA);
             byte[] byteArray = Base64.getDecoder().decode(imgString);
             videoDataListener.receiveVideoData(byteArray);
-        }*/
-    }
+        }
+    }*/
     
     @OnMessage
     public void onMessage(byte[] byteArray){
@@ -101,22 +97,6 @@ public class WebSocket {
         } catch (IOException e) {
             LOG.error("Error sending message: "+e);
         }
-    }
-    
-    private void createUDPListeners(){
-    	int cores = Runtime.getRuntime().availableProcessors();
-    	int[] portsSelected = new int[cores];
-    	int port = 18081;
-    	
-    	DatagramSocket udpSocket;
-    	for (int i=0;i<cores;i++){
-    		try{
-    			udpSocket = new DatagramSocket(port);
-    			
-    		} catch (SocketException e){
-    			port++;
-    		}
-    	}
     }
     
     public void setVideoDataListener(VideoDataListener videoDataListener){
